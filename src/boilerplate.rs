@@ -1,4 +1,5 @@
 #[macro_export]
+/// A macro to remove the generics boilerplate when defining parsers.
 macro_rules! parser {
     (fn $name:ident() -> $output:ty $block:block) => {
         pub fn $name<I>() -> impl ::combine::Parser<Input = I, Output = $output>

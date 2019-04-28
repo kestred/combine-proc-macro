@@ -1,9 +1,12 @@
+//! A collection of parsers for `Token`s (similar to `combine::parser::{char, byte, item}`).
+
 use crate::input::Token;
 use combine::{ParseError, Parser, Stream, StreamOnce};
 use combine::error::{ConsumedResult, FastResult::*, Info, Tracked};
 use combine::stream::uncons;
 use std::marker::PhantomData;
 
+/// Parses an ident token and returns the inner `proc_macro::Ident`.
 pub fn ident<I>() -> Ident<I>
 where
     I: Stream<Item = Token>,
@@ -13,6 +16,7 @@ where
 }
 
 #[derive(Copy, Clone)]
+/// Represents the return type of `ident`.
 pub struct Ident<I>(PhantomData<fn(I) -> I>)
 where
     I: Stream<Item = Token>,
@@ -44,6 +48,7 @@ where
     }
 }
 
+/// Parses an ident token and succeeds if the ident is equal to `word`.
 pub fn keyword<I>(word: &'static str) -> Keyword<I>
 where
     I: Stream<Item = Token>,
@@ -53,6 +58,7 @@ where
 }
 
 #[derive(Copy, Clone)]
+/// Represents the return type of `keyword`.
 pub struct Keyword<I>(&'static str, PhantomData<fn(I) -> I>)
 where
     I: Stream<Item = Token>,
@@ -84,6 +90,7 @@ where
     }
 }
 
+/// Parses a literal token (e.g. string, number, etc) and returns the inner `proc_macro::Literal`.
 pub fn literal<I>() -> Literal<I>
 where
     I: Stream<Item = Token>,
@@ -93,6 +100,7 @@ where
 }
 
 #[derive(Copy, Clone)]
+/// Represents the return type of `literal`.
 pub struct Literal<I>(PhantomData<fn(I) -> I>)
 where
     I: Stream<Item = Token>,
@@ -124,6 +132,10 @@ where
     }
 }
 
+/// Parses a punctuation token and succeeds if it's char representation is equal to `c`.
+///
+/// Cannot match delimiter characters (i.e. `(`, `)`, `{`, `}`, `[, `]`).
+/// To match a delimiter use `delim` instead.
 pub fn punct<I>(c: char) -> Punct<I>
 where
     I: Stream<Item = Token>,
@@ -133,6 +145,7 @@ where
 }
 
 #[derive(Copy, Clone)]
+/// Represents the return type of `punct`.
 pub struct Punct<I>(char, PhantomData<fn(I) -> I>)
 where
     I: Stream<Item = Token>,
@@ -164,6 +177,8 @@ where
     }
 }
 
+
+/// Parses a delimiter if it's char representation is equal to `c`.
 pub fn delim<I>(c: char) -> Delim<I>
 where
     I: Stream<Item = Token>,
@@ -173,6 +188,7 @@ where
 }
 
 #[derive(Copy, Clone)]
+/// Represents the return type of `delim`.
 pub struct Delim<I>(char, PhantomData<fn(I) -> I>)
 where
     I: Stream<Item = Token>,

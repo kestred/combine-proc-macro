@@ -1,3 +1,5 @@
+//! Utilities to generate diagnostic error messages.
+
 use crate::input::Token;
 use combine::ParseError;
 use combine::stream::StreamOnce;
@@ -8,7 +10,7 @@ use std::fmt;
 const DEFAULT_MAX_TRAILING: usize = 50;
 
 /// Incomplete is used in a `#[proc_macro]` to check that all tokens in the Input
-/// have been parsed completely or otherwise provide a printable diagonstic-friendly
+/// have been parsed completely or otherwise provide a printable diagnostic-friendly
 /// representation of remaining tokens.
 ///
 /// ```rust,ignore

@@ -1,3 +1,5 @@
+//! Wrappers and transforms to around `proc_macro` types to implement `combine` traits.
+
 use combine::{Positioned, StreamOnce};
 use combine::stream::StreamErrorFor;
 use combine::stream::easy::Error;
