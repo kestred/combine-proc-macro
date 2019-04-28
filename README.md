@@ -14,7 +14,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-combine-proc-macro = "0.2.0"
+combine-proc-macro = "0.2.1"
 ```
 
 And this in your crate root:
@@ -23,7 +23,10 @@ And this in your crate root:
 extern crate combine_proc_macro;
 ```
 
-To see how the library is used, see the example in the [documentation](https://docs.rs/combine-proc-macro).
+To learn how the library is used, see some examples:
+  - The `hello_macro` in the [documentation](https://docs.rs/combine-proc-macro).
+  - The [grammar definition](https://github.com/kestred/crabwise-antlr-parser/blob/master/src/grammar.rs) in `crabwise-antlr-parser`.
+  - A `#[proc_macro]` [implemented](https://github.com/kestred/crabwise-antlr-parser/blob/master/examples/macro_example/src/lib.rs) using `crabwise-antlr-parser`.
 
 ## Motivation
 When writing a `#[proc_macro_derive]` the input is Rust source code which is
