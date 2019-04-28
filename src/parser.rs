@@ -173,7 +173,7 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Borrowed("<Punct>"));
+        errors.error.add_expected(Info::Token(Token::Punct(proc_macro::Punct::new(self.0, proc_macro::Spacing::Alone))));
     }
 }
 
@@ -216,6 +216,6 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Borrowed("<Delim>"));
+        errors.error.add_expected(Info::Token(Token::Delim(self.0, proc_macro::Span::call_site())));
     }
 }
