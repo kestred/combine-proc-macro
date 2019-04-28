@@ -5,3 +5,4 @@ authors = ["Kevin Stenerson <developer@stenerson.me>"]
 edition = "2018"
 
 [dependencies]
+combine = "3.8.1"
