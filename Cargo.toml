@@ -1,8 +1,16 @@
 [package]
 name = "combine-proc-macro"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Kevin Stenerson <developer@stenerson.me>"]
 edition = "2018"
+
+license = "MIT/Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/kestred/combine-proc-macro"
+documentation = "https://docs.rs/combine-proc-macro"
+description = "Support for using `combine` parser combinators with the `proc_macro` API."
+keywords = ["combine", "proc_macro", "macros"]
+categories = ["parsing"]
 
 [dependencies]
 combine = "3.8.1"
