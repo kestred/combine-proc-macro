@@ -3,7 +3,7 @@
 use crate::input::Token;
 use combine::ParseError;
 use combine::stream::StreamOnce;
-use proc_macro::{TokenTree, TokenStream};
+use proc_macro2::{TokenTree, TokenStream};
 use std::convert::TryFrom;
 use std::fmt;
 

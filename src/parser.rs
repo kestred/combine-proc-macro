@@ -28,7 +28,7 @@ where
     I::Error: ParseError<I::Item, I::Range, I::Position>,
 {
     type Input = I;
-    type Output = proc_macro::Ident;
+    type Output = proc_macro2::Ident;
     type PartialState = ();
 
     fn parse_lazy(&mut self, input: &mut Self::Input) -> ConsumedResult<Self::Output, Self::Input> {
@@ -112,7 +112,7 @@ where
     I::Error: ParseError<I::Item, I::Range, I::Position>,
 {
     type Input = I;
-    type Output = proc_macro::Literal;
+    type Output = proc_macro2::Literal;
     type PartialState = ();
 
     fn parse_lazy(&mut self, input: &mut Self::Input) -> ConsumedResult<Self::Output, Self::Input> {
@@ -173,7 +173,7 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Token(Token::Punct(proc_macro::Punct::new(self.0, proc_macro::Spacing::Alone))));
+        errors.error.add_expected(Info::Token(Token::Punct(proc_macro2::Punct::new(self.0, proc_macro2::Spacing::Alone))));
     }
 }
 
@@ -216,6 +216,6 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Token(Token::Delim(self.0, proc_macro::Span::call_site())));
+        errors.error.add_expected(Info::Token(Token::Delim(self.0, proc_macro2::Span::call_site())));
     }
 }

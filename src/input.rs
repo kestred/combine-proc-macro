@@ -5,8 +5,9 @@ use combine::stream::StreamErrorFor;
 use combine::stream::easy::Error;
 use combine::stream::buffered::BufferedStream;
 use combine::stream::state::{DefaultPositioned, Positioner, State};
-use proc_macro::{Delimiter, Ident, Punct, Literal, Span, TokenStream, TokenTree};
-use proc_macro::token_stream::IntoIter;
+use proc_macro::{TokenStream as TokenStreamBuiltin};
+use proc_macro2::{Delimiter, Ident, Punct, Literal, Span, TokenStream, TokenTree};
+use proc_macro2::token_stream::IntoIter;
 use std::cmp::Ordering;
 use std::convert::TryFrom;
 
@@ -74,6 +75,15 @@ impl Input {
                     None => None,
                 }
             }
+        }
+    }
+}
+impl From<TokenStreamBuiltin> for Input {
+    fn from(stream: TokenStreamBuiltin) -> Input {
+        let stream: TokenStream = stream.to_string().parse().unwrap();
+        Input {
+            source_stack: vec![(stream.into_iter(), None)],
+            source_pos: 0,
         }
     }
 }

@@ -20,9 +20,8 @@
 //! ```rust
 //! # extern crate proc_macro;
 //! use combine::{ParseError, Parser, Stream};
-//! use combine_proc_macro::Token;
+//! use combine_proc_macro::{Token, Literal};
 //! use combine_proc_macro::parser::{delim, keyword, literal, punct};
-//! use proc_macro::Literal;
 //!
 //! /// Parses expressions like `{ hello "world"! }`.
 //! fn hello_grammar<I>() -> impl Parser<Input = I, Output = Literal>
@@ -44,9 +43,9 @@
 //! ```rust
 //! # extern crate proc_macro;
 //! use combine::Parser;
+//! use combine_proc_macro::Literal;
 //! use combine_proc_macro::parser;
 //! use combine_proc_macro::parser::{delim, keyword, literal, punct};
-//! use proc_macro::Literal;
 //!
 //! parser!(fn hello_grammar() -> Literal {
 //!     ( delim('{')
@@ -97,6 +96,7 @@
 //! ```
 
 extern crate proc_macro;
+extern crate proc_macro2;
 
 mod boilerplate;
 pub mod diagnostic;
@@ -105,3 +105,4 @@ pub mod parser;
 
 pub use diagnostic::Incomplete;
 pub use input::{Input, Token};
+pub use proc_macro2::{Ident, Literal, Punct};
