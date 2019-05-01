@@ -44,7 +44,7 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Borrowed("<Ident>"));
+        errors.error.add_expected(Info::Borrowed("IDENT"));
     }
 }
 
@@ -128,7 +128,7 @@ where
     }
 
     fn add_error(&mut self, errors: &mut Tracked<<Self::Input as StreamOnce>::Error>) {
-        errors.error.add_expected(Info::Borrowed("<Literal>"));
+        errors.error.add_expected(Info::Borrowed("LITERAL"));
     }
 }
 
