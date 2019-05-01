@@ -14,7 +14,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-combine-proc-macro = "0.3.0"
+combine-proc-macro = "0.3.1"
 ```
 
 And this in your crate root:
