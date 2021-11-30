@@ -13,5 +13,5 @@ keywords = ["combine", "proc_macro", "macros"]
 categories = ["parsing"]
 
 [dependencies]
-combine = "3.8.1"
-proc-macro2 = "0.4.29"
+combine = { version = "4.6.2", features = ["std"] }
+proc-macro2 = "1.0.32"

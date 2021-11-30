@@ -33,8 +33,8 @@ pub struct Incomplete {
 impl Incomplete {
     pub fn from_stream<I>(mut input: I) -> Option<Incomplete>
     where
-        I: StreamOnce<Item = Token>,
-        I::Error: ParseError<I::Item, I::Range, I::Position>,
+        I: StreamOnce<Token = Token>,
+        I::Error: ParseError<I::Token, I::Range, I::Position>,
     {
         let mut trailing = Vec::new();
         while let Ok(tok) = input.uncons() {

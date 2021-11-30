@@ -24,10 +24,10 @@
 //! use combine_proc_macro::parser::{delim, keyword, literal, punct};
 //!
 //! /// Parses expressions like `{ hello "world"! }`.
-//! fn hello_grammar<I>() -> impl Parser<Input = I, Output = Literal>
+//! fn hello_grammar<I>() -> impl Parser<I, Output = Literal>
 //! where
-//!     I: Stream<Item = Token>,
-//!     I::Error: ParseError<I::Item, I::Range, I::Position>,
+//!     I: Stream<Token = Token>,
+//!     I::Error: ParseError<I::Token, I::Range, I::Position>,
 //! {
 //!     ( delim('{')
 //!     , keyword("hello")
