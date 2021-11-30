@@ -1,16 +1,16 @@
 //! Wrappers and transforms to around `proc_macro` types to implement `combine` traits.
 
-use combine::{Positioned, StreamOnce};
-use combine::stream::StreamErrorFor;
 use combine::stream::easy::Error;
-use combine::stream::buffered::BufferedStream;
-use combine::stream::state::{DefaultPositioned, Positioner, State};
-use proc_macro::{TokenStream as TokenStreamBuiltin};
-use proc_macro2::{Delimiter, Ident, Punct, Literal, Span, TokenStream, TokenTree};
+use combine::stream::{ResetStream, StreamErrorFor};
+use combine::{Positioned, StreamOnce};
+use proc_macro::TokenStream as TokenStreamBuiltin;
 use proc_macro2::token_stream::IntoIter;
+use proc_macro2::{Delimiter, Ident, Literal, Punct, Span, TokenStream, TokenTree};
 use std::cmp::Ordering;
 use std::convert::TryFrom;
+use std::fmt::Display;
 
+#[derive(Clone, Debug)]
 pub struct Input {
     source_stack: Vec<(IntoIter, Option<Token>)>,
     source_pos: usize,
@@ -22,21 +22,16 @@ impl Input {
         self.source_stack.is_empty()
     }
 
-    /// Wraps the input in a BufferedStream that supports lookahead grammars.
-    ///
-    /// By default `combine` produces an LL(1) parser, unless the `attempt`
-    /// combinator is used, so `1` is the recommended default value for `k`.
-    pub fn with_lookahead(self, k: usize) -> BufferedStream<State<Input, SpanPosition>> {
-        BufferedStream::new(State::new(self), k)
-    }
-
     fn next(&mut self) -> Option<Token> {
         if self.source_stack.is_empty() {
             return None;
         }
 
         while !self.source_stack.is_empty() {
-            let next = self.source_stack.last_mut().and_then(|(iter, _)| iter.next());
+            let next = self
+                .source_stack
+                .last_mut()
+                .and_then(|(iter, _)| iter.next());
             let next = match next {
                 Some(tt) => self.ungroup(tt),
                 None => None,
@@ -100,19 +95,23 @@ impl From<Input> for TokenStream {
         let mut rem = TokenStream::new();
         for (source, close) in input.source_stack.into_iter().rev() {
             rem.extend(source);
-            rem.extend(close.into_iter().map(|tok| TokenTree::try_from(tok).unwrap()));
+            rem.extend(
+                close
+                    .into_iter()
+                    .map(|tok| TokenTree::try_from(tok).unwrap()),
+            );
         }
         rem
     }
 }
 
 impl StreamOnce for Input {
-    type Item = Token;
-    type Range =  Self::Item;
+    type Token = Token;
+    type Range = Self::Token;
     type Position = usize;
-    type Error = Error<Self::Item, Self::Range>;
+    type Error = Error<Self::Token, Self::Range>;
 
-    fn uncons(&mut self) -> Result<Self::Item, StreamErrorFor<Self>> {
+    fn uncons(&mut self) -> Result<Self::Token, StreamErrorFor<Self>> {
         match self.next() {
             None => Err(Error::end_of_input()),
             Some(tok) => {
@@ -133,8 +132,17 @@ impl Positioned for Input {
     }
 }
 
-impl DefaultPositioned for Input {
-    type Positioner = SpanPosition;
+impl ResetStream for Input {
+    type Checkpoint = Self;
+
+    fn checkpoint(&self) -> Self::Checkpoint {
+        self.clone()
+    }
+
+    fn reset(&mut self, checkpoint: Self::Checkpoint) -> Result<(), Self::Error> {
+        *self = checkpoint;
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -153,7 +161,7 @@ impl Default for SpanPosition {
     fn default() -> Self {
         SpanPosition {
             pos: 0,
-            span: Span::call_site()
+            span: Span::call_site(),
         }
     }
 }
@@ -177,21 +185,6 @@ impl PartialEq for SpanPosition {
 }
 
 impl Eq for SpanPosition {}
-
-impl Positioner<Token> for SpanPosition {
-    type Position = Self;
-
-    #[inline(always)]
-    fn position(&self) -> Self::Position {
-        self.clone()
-    }
-
-    #[inline]
-    fn update(&mut self, item: &Token) {
-        self.pos += 1;
-        self.span = item.span();
-    }
-}
 
 #[derive(Clone, Debug)]
 pub enum Token {
@@ -241,6 +234,17 @@ impl TryFrom<Token> for TokenTree {
             Token::Punct(tok) => Ok(TokenTree::Punct(tok)),
             Token::Ident(tok) => Ok(TokenTree::Ident(tok)),
             Token::Literal(tok) => Ok(TokenTree::Literal(tok)),
+        }
+    }
+}
+
+impl Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Token::Delim(l, _) => write!(f, "{}", l),
+            Token::Punct(l) => write!(f, "{}", l.as_char()),
+            Token::Ident(l) => write!(f, "{}", l),
+            Token::Literal(l) => write!(f, "{}", l),
         }
     }
 }

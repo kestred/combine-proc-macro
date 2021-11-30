@@ -1,7 +1,10 @@
 [package]
 name = "combine-proc-macro"
-version = "0.3.1"
-authors = ["Kevin Stenerson <developer@stenerson.me>"]
+version = "1.0.0"
+authors = [
+    "Kevin Stenerson <developer@stenerson.me>",
+    "John Williams <jrw@google.com>",
+]
 edition = "2018"
 
 license = "MIT/Apache-2.0"
@@ -13,5 +16,5 @@ keywords = ["combine", "proc_macro", "macros"]
 categories = ["parsing"]
 
 [dependencies]
-combine = "3.8.1"
-proc-macro2 = "0.4.29"
+combine = { version = "4.6.2", features = ["std"] }
+proc-macro2 = "1.0.32"
